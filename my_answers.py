@@ -29,12 +29,12 @@ def window_transform_series(series,window_size):
 # TODO: build an RNN to perform regression on our time series input/output data
 
 model = Sequential()
-step_size = 1
 # LSTM with 5 hidden layers 
 model.add(LSTM(5, input_shape = (window_size,step_size)))
 # Dense layer with 1 output node and linear activation function
 model.add(Dense(1, activation='linear'))
-
+# prints layers,output and any Parameters
+model.summary()
 
 # model optimizer with keras 
 optimizer = keras.optimizers.RMSprop(lr=0.001, rho=0.9, epsilon=1e-08, decay=0.0)
@@ -42,7 +42,6 @@ optimizer = keras.optimizers.RMSprop(lr=0.001, rho=0.9, epsilon=1e-08, decay=0.0
 # compile the model
 model.compile(loss='mean_squared_error', optimizer=optimizer)
 
-model.summary()
 
 
 
@@ -60,9 +59,8 @@ for i in range(0,len(valid_english_characters)):
 nonvalid_english_characters = list(set(test_text))
 #Print all non-valid english characters 
 print(nonvalid_english_characters)
-#final non-valid english characters
-nonvalid_english_characters = ['/', '(', '"', '&', '%', '*', ')', '-', '$', '@', "'", '1', '2', '3', '4', '5', '6', '7', '8', '9', '0', 'è', 'é',  'à', 'â']
 #Remove non-valid english characters from text 
+nonvalid_english_characters = ['/', '(', '"', '&', '%', '*', ')', '-', '$', '@', "'", '1', '2', '3', '4', '5', '6', '7', '8', '9', '0', 'è', 'é',  'à', 'â']
 for i in range(0,len(nonvalid_english_characters)):
     text = text.replace(nonvalid_english_characters[i],'')
     
@@ -77,9 +75,8 @@ def window_transform_text(text,window_size,step_size):
     # containers for input/output pairs
     inputs = []
     outputs = []
-    # Last element of the input/output pair
+    #input/output pair with loop until end
     rnnElement = window_size
-    # Loop until the lastElement of the input/output pair is the last element of the text
     while(rnnElement<len(text)):
         inputs.append(text[rnnElement-window_size:rnnElement])
         outputs.append(text[rnnElement])
